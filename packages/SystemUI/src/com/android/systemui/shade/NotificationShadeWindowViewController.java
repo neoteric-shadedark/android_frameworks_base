@@ -756,6 +756,12 @@ public class NotificationShadeWindowViewController implements Dumpable {
         mDragDownHelper = dragDownHelper;
     }
 
+    public void fling(float vel, boolean expand, boolean expandBecauseOfFalsing) {
+        if (mNotificationPanelViewController != null) {
+            mNotificationPanelViewController.fling(vel, expand, expandBecauseOfFalsing);    
+        }
+    }    
+
     public void setDoubleTapToSleepGesture() {
         boolean isDoubleTapLockscreenEnabled = Settings.System.getIntForUser(mView.getContext().getContentResolver(),
                 Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN, 0, UserHandle.USER_CURRENT) == 1;
