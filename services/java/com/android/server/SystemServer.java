@@ -177,6 +177,7 @@ import com.android.server.display.DcDimmingService;
 import com.android.server.devicestate.DeviceStateManagerService;
 import com.android.server.display.AutoAODService;
 import com.android.server.display.DisplayManagerService;
+import com.android.server.display.FreeformService;
 import com.android.server.display.color.ColorDisplayService;
 import com.android.server.dreams.DreamManagerService;
 import com.android.server.emergency.EmergencyAffordanceService;
@@ -2844,6 +2845,9 @@ public final class SystemServer implements Dumpable {
 
             t.traceBegin("AppLockManagerService");
             mSystemServiceManager.startService(AppLockManagerService.Lifecycle.class);
+            
+            t.traceBegin("FreeformService");
+            mSystemServiceManager.startService(FreeformService.class);
             t.traceEnd();
 
             if (!isWatch) {
