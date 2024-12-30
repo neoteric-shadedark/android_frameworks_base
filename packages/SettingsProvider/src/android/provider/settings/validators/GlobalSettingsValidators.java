@@ -476,5 +476,6 @@ public class GlobalSettingsValidators {
                         }));
         VALIDATORS.put(Global.Wearable.GESTURE_PRIMARY_ACTION_USER_PREFERENCE, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Global.Wearable.GESTURE_DISMISS_ACTION_USER_PREFERENCE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Global.USER_MIN_AUTO_BRIGHTNESS, new InclusiveIntegerRangeValidator(0, 100));
     }
 }

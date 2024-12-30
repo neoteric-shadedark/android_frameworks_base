@@ -20747,6 +20747,13 @@ public final class Settings {
                 "redact_otp_notifications_from_untrusted_listeners";
 
         /**
+         * Minimal value in decimal percentage auto brightness should go to
+         * @hide
+         */
+        @Readable
+        public static final String USER_MIN_AUTO_BRIGHTNESS = "user_min_auto_brightness";
+
+        /**
          * Settings migrated from Wear OS settings provider.
          * @hide
          */
