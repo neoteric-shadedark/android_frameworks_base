@@ -309,6 +309,10 @@ public class SecureSettings {
         Settings.Secure.DOZE_ON_CHARGE,
 	Settings.Secure.TETHERING_ALLOW_VPN_UPSTREAMS,
         Settings.Secure.QS_SHOW_DATA_USAGE,
-        Settings.Secure.QS_DATA_USAGE_CYCLE_TYPE
+        Settings.Secure.QS_DATA_USAGE_CYCLE_TYPE,
+        Settings.Secure.UI_NIGHT_MODE_DIM_WALL,
+        Settings.Secure.UI_NIGHT_MODE_DIM_WALL_AMOUNT,
+        Settings.Secure.UI_NIGHT_LIGHT_DIM_WALL,
+        Settings.Secure.UI_NIGHT_LIGHT_DIM_WALL_AMOUNT,
     };
 }
