@@ -12723,7 +12723,8 @@ public class AudioService extends IAudioService.Stub
             synchronized (mHdmiClientLock) {
                 if (mHdmiManager == null) return;
                 boolean cecEnabled = isCecEnabled == HdmiControlManager.HDMI_CEC_CONTROL_ENABLED;
-                updateHdmiCecSinkLocked(cecEnabled ? isCecAvailable : false);
+                updateHdmiCecSinkLocked(cecEnabled && isCecAvailable
+                        && mHdmiCecVolumeControlEnabled);
             }
         }
     };
@@ -12736,6 +12737,7 @@ public class AudioService extends IAudioService.Stub
                 if (mHdmiManager == null) return;
                 mHdmiCecVolumeControlEnabled =
                         hdmiCecVolumeControl == HdmiControlManager.VOLUME_CONTROL_ENABLED;
+                updateHdmiCecSinkLocked(mHdmiCecVolumeControlEnabled);
             }
         }
     };
