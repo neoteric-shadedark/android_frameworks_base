@@ -126,6 +126,7 @@ import android.hardware.hdmi.HdmiTvClient;
 import android.hardware.input.InputManager;
 import android.hardware.usb.UsbManager;
 import android.hidl.manager.V1_0.IServiceManager;
+import android.media.AppVolume;
 import android.media.AudioAttributes;
 import android.media.AudioAttributes.AttributeSystemUsage;
 import android.media.AudioDescriptor;
@@ -372,6 +373,7 @@ public class AudioService extends IAudioService.Stub
 
     final Context mContext;
     private final ContentResolver mContentResolver;
+    private int mShowAppVolume;
     private final AppOpsManager mAppOps;
 
     /** do not use directly, use getMediaSessionManager() which handles lazy initialization */
@@ -3394,6 +3396,9 @@ public class AudioService extends IAudioService.Stub
         updateMasterMono(cr);
 
         updateMasterBalance(cr);
+
+        mShowAppVolume = mSettings.getSystemIntForUser(cr,
+                Settings.System.SHOW_APP_VOLUME, 0, UserHandle.USER_CURRENT);
 
         // Each stream will read its own persisted settings
 
@@ -10943,6 +10948,8 @@ public class AudioService extends IAudioService.Stub
                     Settings.System.MAX_MUSIC_VOLUME), false, this, UserHandle.USER_ALL);
             mContentResolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.MAX_ALARM_VOLUME), false, this, UserHandle.USER_ALL);
+            mContentResolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SHOW_APP_VOLUME), false, this);
 
             mEncodedSurroundMode = mSettings.getGlobalInt(
                     mContentResolver, Settings.Global.ENCODED_SURROUND_OUTPUT,
@@ -11000,6 +11007,18 @@ public class AudioService extends IAudioService.Stub
                 updateEncodedSurroundOutput();
                 sendEnabledSurroundFormats(mContentResolver, mSurroundModeChanged);
                 updateAssistantUIdLocked(/* forceUpdate= */ false);
+                updateShowAppVolume(mContentResolver);
+            }
+        }
+
+        private void updateShowAppVolume(ContentResolver cr) {
+            int showAppVolume = mSettings.getSystemIntForUser(cr,
+                    Settings.System.SHOW_APP_VOLUME, 0, UserHandle.USER_CURRENT);
+            if (mShowAppVolume != showAppVolume) {
+                mShowAppVolume = showAppVolume;
+                if (mShowAppVolume == 0) {
+                    resetAppVolumes();
+                }
             }
         }
 
@@ -11040,6 +11059,17 @@ public class AudioService extends IAudioService.Stub
             }
             // re-init everything, everywhere.
             onAudioServerDied();
+        }
+    }
+
+    private void resetAppVolumes() {
+        ArrayList<AppVolume> volumes = new ArrayList<>();
+        int status = AudioSystem.listAppVolumes(volumes);
+        if (status == AudioSystem.SUCCESS) {
+            for (AppVolume vol : volumes) {
+                AudioSystem.setAppVolume(vol.getPackageName(), 1.0f);
+                AudioSystem.setAppMute(vol.getPackageName(), false);
+            }
         }
     }
 
