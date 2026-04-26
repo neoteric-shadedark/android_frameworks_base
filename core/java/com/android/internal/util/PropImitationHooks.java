@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.Process;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,6 +63,8 @@ public class PropImitationHooks {
     private static final String PACKAGE_GMS = "com.google.android.gms";
     private static final String PROCESS_GMS_UNSTABLE = PACKAGE_GMS + ".unstable";
     private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
+
+    private static final String SPOOF_PHOTOS = "persist.sys.pihooks.photos";
 
     private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY = ComponentName.unflattenFromString(
             "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
@@ -218,6 +221,10 @@ public class PropImitationHooks {
         "PIXEL_2024_MIDYEAR_EXPERIENCE"
     );
 
+    public static boolean isPhotosSpoofEnabled() {
+        return SystemProperties.getBoolean(SPOOF_PHOTOS, false);
+    }
+
     private static volatile List<String> sCertifiedProps = new ArrayList<>();
     private static volatile String sStockFp, sNetflixModel;
 
@@ -267,7 +274,8 @@ public class PropImitationHooks {
 
         Map<String, Object> propsToChange = new HashMap<>();
 
-        if (packagesToChangePixelXL.contains(packageName)) {
+        if (SystemProperties.getBoolean(SPOOF_PHOTOS, false) 
+                && packagesToChangePixelXL.contains(packageName)) {
             propsToChange.putAll(propsToChangePixelXL);
         } else if (packagesToChangeROG6.contains(packageName)) {
             propsToChange.putAll(propsToChangeROG6);
@@ -289,12 +297,14 @@ public class PropImitationHooks {
             propsToChange.putAll(propsToChangeBS4);
         }
 
-        dlog("Defining props for: " + packageName);
-        for (Map.Entry<String, Object> prop : propsToChange.entrySet()) {
-            String key = prop.getKey();
-            Object value = prop.getValue();
-            dlog("Defining " + key + " prop for: " + packageName);
-            setPropValue(key, value);
+        if (!propsToChange.isEmpty()) {
+            dlog("Defining props for: " + packageName);
+            for (Map.Entry<String, Object> prop : propsToChange.entrySet()) {
+                String key = prop.getKey();
+                Object value = prop.getValue();
+                dlog("Defining " + key + " prop for: " + packageName);
+                setPropValue(key, value);
+            }
         }
     }
 
