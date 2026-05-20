@@ -16,7 +16,6 @@
 
 package com.android.systemui.shade
 
-import android.content.Context
 import android.graphics.Point
 import android.hardware.display.AmbientDisplayConfiguration
 import android.os.PowerManager
@@ -51,7 +50,6 @@ import javax.inject.Inject
 class PulsingGestureListener
 @Inject
 constructor(
-    private val context: Context,
     private val falsingManager: FalsingManager,
     private val dockManager: DockManager,
     private val powerInteractor: PowerInteractor,
@@ -65,7 +63,6 @@ constructor(
 ) : GestureDetector.SimpleOnGestureListener(), Dumpable {
     private var doubleTapEnabled = false
     private var singleTapEnabled = false
-    private var doubleTapEnabledNative = false
 
     init {
         val tunable = Tunable { key: String?, _: String? ->
@@ -76,17 +73,12 @@ constructor(
                 Settings.Secure.DOZE_TAP_SCREEN_GESTURE ->
                     singleTapEnabled =
                         ambientDisplayConfiguration.tapGestureEnabled(userTracker.userId)
-                Settings.Secure.DOUBLE_TAP_TO_WAKE ->
-                    doubleTapEnabledNative = Settings.Secure.getIntForUser(
-                            context.getContentResolver(),
-                            Settings.Secure.DOUBLE_TAP_TO_WAKE, 0, userTracker.userId) == 1
             }
         }
         tunerService.addTunable(
             tunable,
             Settings.Secure.DOZE_DOUBLE_TAP_GESTURE,
-            Settings.Secure.DOZE_TAP_SCREEN_GESTURE,
-            Settings.Secure.DOUBLE_TAP_TO_WAKE
+            Settings.Secure.DOZE_TAP_SCREEN_GESTURE
         )
 
         dumpManager.registerDumpable(this)
@@ -133,7 +125,7 @@ constructor(
         // checks MUST be on the ACTION_UP event.
         if (
             statusBarStateController.isDozing &&
-                (doubleTapEnabled || singleTapEnabled || doubleTapEnabledNative) &&
+                (doubleTapEnabled || singleTapEnabled) &&
                 !falsingManager.isProximityNear &&
                 !falsingManager.isFalseDoubleTap
         ) {
