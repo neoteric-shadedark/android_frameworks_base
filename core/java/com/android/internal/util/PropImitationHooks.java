@@ -65,6 +65,7 @@ public class PropImitationHooks {
     private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
 
     private static final String SPOOF_PHOTOS = "persist.sys.pihooks.photos";
+    private static final String SPOOF_GAMES = "persist.sys.pihooks.games";
 
     private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY = ComponentName.unflattenFromString(
             "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
@@ -277,24 +278,26 @@ public class PropImitationHooks {
         if (SystemProperties.getBoolean(SPOOF_PHOTOS, false) 
                 && packagesToChangePixelXL.contains(packageName)) {
             propsToChange.putAll(propsToChangePixelXL);
-        } else if (packagesToChangeROG6.contains(packageName)) {
-            propsToChange.putAll(propsToChangeROG6);
-        } else if (packagesToChangeS24U.contains(packageName)) {
-            propsToChange.putAll(propsToChangeS24U);
-        } else if (packagesToChangeLenovoY700.contains(packageName)) {
-            propsToChange.putAll(propsToChangeLenovoY700);
-        } else if (packagesToChangeOP8P.contains(packageName)) {
-            propsToChange.putAll(propsToChangeOP8P);
-        } else if (packagesToChangeOP9P.contains(packageName)) {
-            propsToChange.putAll(propsToChangeOP9P);
-        } else if (packagesToChangeMI11TP.contains(packageName)) {
-            propsToChange.putAll(propsToChangeMI11TP);
-        } else if (packagesToChangeMI13P.contains(packageName)) {
-            propsToChange.putAll(propsToChangeMI13P);
-        } else if (packagesToChangeF5.contains(packageName)) {
-            propsToChange.putAll(propsToChangeF5);
-        } else if (packagesToChangeBS4.contains(packageName)) {
-            propsToChange.putAll(propsToChangeBS4);
+        } else if (SystemProperties.getBoolean(SPOOF_GAMES, false)) {
+            if (packagesToChangeROG6.contains(packageName)) {
+                propsToChange.putAll(propsToChangeROG6);
+            } else if (packagesToChangeS24U.contains(packageName)) {
+                propsToChange.putAll(propsToChangeS24U);
+            } else if (packagesToChangeLenovoY700.contains(packageName)) {
+                propsToChange.putAll(propsToChangeLenovoY700);
+            } else if (packagesToChangeOP8P.contains(packageName)) {
+                propsToChange.putAll(propsToChangeOP8P);
+            } else if (packagesToChangeOP9P.contains(packageName)) {
+                propsToChange.putAll(propsToChangeOP9P);
+            } else if (packagesToChangeMI11TP.contains(packageName)) {
+                propsToChange.putAll(propsToChangeMI11TP);
+            } else if (packagesToChangeMI13P.contains(packageName)) {
+                propsToChange.putAll(propsToChangeMI13P);
+            } else if (packagesToChangeF5.contains(packageName)) {
+                propsToChange.putAll(propsToChangeF5);
+            } else if (packagesToChangeBS4.contains(packageName)) {
+                propsToChange.putAll(propsToChangeBS4);
+            }
         }
 
         if (!propsToChange.isEmpty()) {
