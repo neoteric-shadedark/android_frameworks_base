@@ -26,7 +26,12 @@ import android.annotation.NonNull;
 import java.util.Set;
 import android.annotation.Nullable;
 import android.content.pm.Flags;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.SigningDetails;
+import com.android.internal.pm.pkg.component.ParsedActivity;
+import com.android.internal.pm.pkg.component.ParsedIntentInfo;
+import com.android.server.pm.pkg.AndroidPackage;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.Process;
@@ -383,6 +388,25 @@ public abstract class AppsFilterBase implements AppsFilterSnapshot {
         return true;
     }
 
+    private static boolean isCallerLauncher(Object callingSetting) {
+        if (!(callingSetting instanceof PackageStateInternal)) {
+            return false;
+        }
+        AndroidPackage pkg = ((PackageStateInternal) callingSetting).getAndroidPackage();
+        if (pkg == null) {
+            return false;
+        }
+        for (ParsedActivity activity : pkg.getActivities()) {
+            for (ParsedIntentInfo intentInfo : activity.getIntents()) {
+                IntentFilter filter = intentInfo.getIntentFilter();
+                if (filter != null && filter.hasCategory(Intent.CATEGORY_HOME)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean shouldFilterApplication(PackageDataSnapshot snapshot, int callingUid,
             @Nullable Object callingSetting, PackageStateInternal targetPkgSetting, int userId) {
@@ -394,7 +418,8 @@ public abstract class AppsFilterBase implements AppsFilterSnapshot {
             String targetPkg = targetPkgSetting.getPackageName();
             if (callingAppId >= Process.FIRST_APPLICATION_UID
                     && !isCallerSystemApp(callingSetting)
-                    && (ROOT_PACKAGES.contains(targetPkg) || isRomPackage(targetPkg))) {
+                    && (ROOT_PACKAGES.contains(targetPkg) || isRomPackage(targetPkg))
+                    && !isCallerLauncher(callingSetting)) {
                 return true;
             }
             if (callingAppId < Process.FIRST_APPLICATION_UID
