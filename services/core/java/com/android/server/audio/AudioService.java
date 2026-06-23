@@ -11583,7 +11583,14 @@ public class AudioService extends IAudioService.Stub
                 }
             }
         }
-        return mMediaFocusControl.abandonAudioFocus(fd, clientId, aa, callingPackageName);
+        final int result = mMediaFocusControl.abandonAudioFocus(fd, clientId, aa, callingPackageName);
+        if (isVoiceCallActive()) {
+            if (DEBUG_MODE) {
+                Slog.d(TAG, "Re-applying VOICE_CALL volume after focus abandon in communication mode");
+            }
+            resyncVoiceCallVolume();
+        }
+        return result;
     }
 
     /** synchronization between setMode(NORMAL) and abandonAudioFocus() from Telecom */
