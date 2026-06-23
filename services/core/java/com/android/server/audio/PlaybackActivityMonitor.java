@@ -165,12 +165,15 @@ public final class PlaybackActivityMonitor
     private int mPrivilegedAlarmActiveCount = 0;
     private final Consumer<AudioDeviceAttributes> mMuteAwaitConnectionTimeoutCb;
     private final FadeOutManager mFadeOutManager = new FadeOutManager();
+    private final AudioService mAudioService;
 
     PlaybackActivityMonitor(Context context, int maxAlarmVolume,
             Consumer<AudioDeviceAttributes> muteTimeoutCallback,
-            Function<Integer, Boolean> isStreamMutedCb) {
+            Function<Integer, Boolean> isStreamMutedCb,
+            AudioService audioService) {
         mContext = context;
         mMaxAlarmVolume = maxAlarmVolume;
+        mAudioService = audioService;
         PlayMonitorClient.sListenerDeathMonitor = this;
         AudioPlaybackConfiguration.sPlayerDeathMonitor = this;
         mMuteAwaitConnectionTimeoutCb = muteTimeoutCallback;
@@ -414,6 +417,21 @@ public final class PlaybackActivityMonitor
                         mDuckingManager.checkDuck(apc);
                     }
                     mFadeOutManager.checkFade(apc);
+                } else if (event == AudioPlaybackConfiguration.PLAYER_STATE_PAUSED
+                        || event == AudioPlaybackConfiguration.PLAYER_STATE_STOPPED
+                        || event == AudioPlaybackConfiguration.PLAYER_STATE_RELEASED) {
+                    // A concurrent media player pausing/stopping/releasing can leave the
+                    // voice-call stream unrouted at the HAL until a manual volume change.
+                    // Only AudioService knows the correct device for STREAM_VOICE_CALL, so
+                    // delegate the resync to it rather than resolving the device here.
+                    if (mAudioService != null && mAudioService.isVoiceCallActiveInternal()) {
+                        if (DEBUG) {
+                            Log.i(TAG, "Concurrent media player "
+                                    + AudioPlaybackConfiguration.playerStateToString(event)
+                                    + " during active call; re-syncing VOICE_CALL volume.");
+                        }
+                        mAudioService.resyncVoiceCallVolumeInternal();
+                    }
                 }
                 if (doNotLog) {
                     // do not dispatch events for "ignored" players
