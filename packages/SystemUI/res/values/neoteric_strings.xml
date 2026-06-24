@@ -110,10 +110,6 @@
     <string name="refresh_rate_tile_label">Refresh rate</string>
     <string name="refresh_rate_adaptive">Adaptive</string>
 
-    <!-- Preferred network tile -->
-    <string name="quick_settings_preferred_network_label">Preferred network</string>
-    <string name="quick_settings_preferred_network_unsupported">Unsupported</string>
-
     <!-- PowerShare QS tile -->
     <string name="quick_settings_powershare_label">Battery Share</string>
     <string name="quick_settings_powershare_off_powersave_label">Battery Share off\nBattery saver</string>

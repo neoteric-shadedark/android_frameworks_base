@@ -56,7 +56,7 @@
 
     <!-- Extra Quick Settings tiles -->
     <string name="quick_settings_tiles_extra" translatable="false">
-	caffeine,heads_up,sync,ambient_display,usb_tether,aod,wifi,cell,vpn,sound,compass,dataswitch,locale,refresh_rate,preferred_network,powershare,dns
+	caffeine,heads_up,sync,ambient_display,usb_tether,aod,wifi,cell,vpn,sound,compass,dataswitch,locale,refresh_rate,powershare,dns
     </string>
 
     <!-- If not zero, limits the internal screen recorder's framerate to the set value. -->

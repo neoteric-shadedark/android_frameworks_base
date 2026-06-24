@@ -31,7 +31,6 @@ import com.android.systemui.qs.tiles.DnsTile
 import com.android.systemui.qs.tiles.HeadsUpTile
 import com.android.systemui.qs.tiles.LocaleTile
 import com.android.systemui.qs.tiles.PowerShareTile
-import com.android.systemui.qs.tiles.PreferredNetworkTile
 import com.android.systemui.qs.tiles.RefreshRateTile
 import com.android.systemui.qs.tiles.SoundTile
 import com.android.systemui.qs.tiles.SyncTile
@@ -111,12 +110,6 @@ interface NeotericModule {
     @IntoMap
     @StringKey(PowerShareTile.TILE_SPEC)
     fun bindPowerShareTile(powerShareTile: PowerShareTile): QSTileImpl<*>
-
-    /** Inject PreferredNetworkTile into tileMap in QSModule */
-    @Binds
-    @IntoMap
-    @StringKey(PreferredNetworkTile.TILE_SPEC)
-    fun bindPreferredNetworkTile(preferredNetworkTile: PreferredNetworkTile): QSTileImpl<*>
 
     /** Inject RefreshRateTile into tileMap in QSModule */
     @Binds
@@ -293,21 +286,6 @@ interface NeotericModule {
                 ),
                 instanceId = uiEventLogger.getNewInstanceId(),
                 category = TileCategory.ACCESSIBILITY
-            )
-        }
-
-        @Provides
-        @IntoMap
-        @StringKey(PreferredNetworkTile.TILE_SPEC)
-        fun providePreferredNetworkTileConfig(uiEventLogger: QsEventLogger): QSTileConfig {
-            return QSTileConfig(
-                tileSpec = TileSpec.create(PreferredNetworkTile.TILE_SPEC),
-                uiConfig = QSTileUIConfig.Resource(
-                    iconRes = R.drawable.ic_preferred_network,
-                    labelRes = R.string.quick_settings_preferred_network_label
-                ),
-                instanceId = uiEventLogger.getNewInstanceId(),
-                category = TileCategory.CONNECTIVITY
             )
         }
 
