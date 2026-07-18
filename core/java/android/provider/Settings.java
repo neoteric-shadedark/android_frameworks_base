@@ -13588,34 +13588,6 @@ public final class Settings {
                 "com.android.server.display.HBM_SETTING_KEY";
 
         /**
-         * User selectable PIF data.
-         * @hide
-         */
-        @Readable
-        public static final String PIF_DATA = "pif_data";
-
-        /**
-         * User selectable PIF data.
-         * @hide
-         */
-        @Readable
-        public static final String PIF_DATA_TIMESTAMP = "pif_data_timestamp";
-
-        /**
-         * PIF data fetched from our repo.
-         * @hide
-         */
-        @Readable
-        public static final String FETCHED_PIF = "fetched_pif";
-
-        /**
-         * User selectable keybox data.
-         * @hide
-         */
-        @Readable
-        public static final String KEYBOX_DATA = "keybox_data";
-
-        /**
          * Our GameSpace can't write to device_config directly [GTS]
          * Use this as intermediate to pass device_config property
          * from our GameSpace to com.android.server.app.GameManagerService
@@ -13674,61 +13646,6 @@ public final class Settings {
          * @hide
          */
         public static final String ENABLE_PROJECTION_PRIVACY_INDICATOR = "enable_projection_privacy_indicator";
-
-        /**
-         * User selectable keybox data.
-         * @hide
-         */
-        @Readable
-        public static final String KEYBOX_DATA_TIMESTAMP = "keybox_data_timestamp";
-
-        /**
-         * Whether to allow gms to get certificate chain or not.
-         * @hide
-         */
-        @Readable
-        public static final String GMS_CERT_CHAIN = "gms_cert_chain";
-
-        /**
-         * Store vboot key.
-         * @hide
-         */
-        @Readable
-        public static final String VBOOT_KEY = "vboot_key";
-
-
-        /**
-         * Store vboot hash.
-         * @hide
-         */
-        @Readable
-        public static final String VBOOT_HASH = "vboot_hash";
-
-        /**
-         * Per-apps device spoofing
-         * @hide
-         */
-        @Readable
-        public static final String PER_APPS_DEVICE_SPOOF = "per_apps_device_spoof";
-
-        /**
-         * Custom device spoof profiles for per-app spoofing
-         * @hide
-         */
-        @Readable
-        public static final String CUSTOM_SPOOF_PROFILES = "custom_spoof_profiles";
-
-        /** 
-         * @hide 
-         */
-        @Readable
-        public static final String PER_APPS_DEVICE_SPOOF_ENABLED = "per_apps_device_spoof_enabled";
-
-        /** 
-         * @hide 
-         */
-        @Readable
-        public static final String PER_APPS_DEVICE_SPOOF_CACHE = "per_apps_device_spoof_cache";
 
         /**
          * Keys we no longer back up under the current schema, but want to continue to
